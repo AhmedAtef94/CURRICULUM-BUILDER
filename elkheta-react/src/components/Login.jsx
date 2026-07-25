@@ -71,7 +71,7 @@ export default function Login() {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <img src="/new-logo.png" alt="Elkheta" className="login-logo" />
+        <img src={import.meta.env.BASE_URL + 'new-logo.png'} alt="Elkheta" className="login-logo" />
         <h2>Elkheta Curriculum</h2>
         <p className="muted">{isSignup ? 'أنشئ حسابًا جديدًا' : 'سجّل الدخول للمتابعة'}</p>
 

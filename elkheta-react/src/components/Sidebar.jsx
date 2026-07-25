@@ -1,5 +1,10 @@
 import { roleLabel } from '../lib/constants';
 
+// Vite fills BASE_URL with "/" in dev and "/<repo>/" on GitHub Pages, so a
+// bare "/new-logo.png" (which resolves against the domain root) 404s once
+// deployed under a sub-path.
+const logo = import.meta.env.BASE_URL + 'new-logo.png';
+
 export default function Sidebar({ profile, view, setView, onLogout, onOpenProfile }) {
   const initial = (profile.full_name || profile.email || '؟').trim().charAt(0).toUpperCase();
   return (
@@ -12,7 +17,7 @@ export default function Sidebar({ profile, view, setView, onLogout, onOpenProfil
         onClick={() => setView('curriculum')}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView('curriculum'); } }}
       >
-        <img src="/new-logo.png" alt="Elkheta — الصفحة الرئيسية" className="sidebar-logo" />
+        <img src={logo} alt="Elkheta — الصفحة الرئيسية" className="sidebar-logo" />
         <div style={{ fontSize: 11, color: '#64748b', marginTop: 6, letterSpacing: 1 }}>CURRICULUM BUILDER</div>
       </div>
 
