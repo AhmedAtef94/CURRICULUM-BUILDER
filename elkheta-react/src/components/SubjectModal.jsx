@@ -9,9 +9,13 @@ export default function SubjectModal({ mode, subject, existingCount, subjects = 
   const [grade, setGrade] = useState(subject?.grade || '');
   const [term, setTerm] = useState(subject?.term || '');
   const [color, setColor] = useState(subject?.color || '#facc15');
-  const [err, setErr] = useState({}); // { name, grade, term }
+  const [err, setErr] = useState({}); // per-field "required" text
+  const [dup, setDup] = useState(false); // duplicate → highlight all three
+  const [banner, setBanner] = useState(''); // prominent message at the top
   const [saving, setSaving] = useState(false);
-  const clear = (k) => setErr((p) => (p[k] ? { ...p, [k]: '' } : p));
+  const clear = (k) => { setErr((p) => (p[k] ? { ...p, [k]: '' } : p)); setDup(false); setBanner(''); };
+
+  const norm = (v) => (v || '').trim().toLowerCase();
 
   // preserve an existing custom name that isn't in the fixed list
   const nameOptions = subject?.name && !SUBJECT_NAMES.includes(subject.name)
@@ -24,15 +28,21 @@ export default function SubjectModal({ mode, subject, existingCount, subjects = 
       grade: grade ? '' : 'اختر السنة الدراسية',
       term: term ? '' : 'اختر الترم',
     };
-    // Same name + grade + term = the same subject. Ignore the row being edited.
-    if (!e.name && !e.grade && !e.term) {
-      const dup = subjects.find((s) =>
-        s.id !== subject?.id &&
-        (s.name || '').trim() === name.trim() && s.grade === grade && s.term === term);
-      if (dup) e.name = 'المادة دي موجودة بالفعل بنفس السنة والترم';
+    if (e.name || e.grade || e.term) {
+      setErr(e); setDup(false);
+      setBanner('كمّل الحقول المطلوبة المميّزة بالأحمر');
+      return;
     }
-    setErr(e);
-    if (e.name || e.grade || e.term) return;
+    // Same name + grade + term = the same subject. Ignore the row being edited.
+    const exists = subjects.some((s) =>
+      s.id !== subject?.id &&
+      norm(s.name) === norm(name) && (s.grade || '') === grade && (s.term || '') === term);
+    if (exists) {
+      setErr({}); setDup(true);
+      setBanner(`المادة «${name.trim()}» موجودة بالفعل بنفس السنة والترم — مينفعش تتكرر`);
+      return;
+    }
+    setErr({}); setDup(false); setBanner('');
 
     setSaving(true);
     try {
@@ -57,9 +67,11 @@ export default function SubjectModal({ mode, subject, existingCount, subjects = 
       <div className="modal-box sm">
         <h2>{mode === 'edit' ? 'تعديل المادة' : 'مادة جديدة'}</h2>
 
+        {banner && <div className="form-banner-err">⚠ {banner}</div>}
+
         <div className="field">
           <label>اسم المادة</label>
-          <select className={err.name ? 'invalid' : ''} value={name}
+          <select className={err.name || dup ? 'invalid' : ''} value={name}
             onChange={(e) => { setName(e.target.value); clear('name'); }}>
             <option value="">— اختر المادة —</option>
             {nameOptions.map((n) => <option key={n} value={n}>{n}</option>)}
@@ -70,12 +82,12 @@ export default function SubjectModal({ mode, subject, existingCount, subjects = 
         <div className="field">
           <label>السنة الدراسية والترم</label>
           <div className="au-grid">
-            <select className={err.grade ? 'invalid' : ''} value={grade}
+            <select className={err.grade || dup ? 'invalid' : ''} value={grade}
               onChange={(e) => { setGrade(e.target.value); clear('grade'); clear('name'); }}>
               <option value="">— اختر السنة —</option>
               {GRADES.map((g) => <option key={g.code} value={g.code}>{g.code} — {g.label}</option>)}
             </select>
-            <select className={err.term ? 'invalid' : ''} value={term}
+            <select className={err.term || dup ? 'invalid' : ''} value={term}
               onChange={(e) => { setTerm(e.target.value); clear('term'); clear('name'); }}>
               <option value="">— اختر الترم —</option>
               {TERMS.map((t) => <option key={t.code} value={t.code}>{t.code} — {t.label}</option>)}
