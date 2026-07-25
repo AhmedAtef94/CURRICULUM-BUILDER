@@ -184,6 +184,10 @@ export default function TeamsUsers({ me }) {
                             </label>
                           ))}
                         </div>
+                      ) : u.role === 'viewer' ? (
+                        // Assignment only scopes editors. Point the admin at the
+                        // one action that unlocks it instead of a dead dash.
+                        <span className="muted">👁️ بيشوف كل المواد — غيّر الدور لـ «عضو فريق» عشان تسنده لمواد محددة</span>
                       ) : (
                         <span className="muted">— (الدور ده بيشوف الكل)</span>
                       )}
