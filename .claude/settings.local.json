@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(winget install -e --id OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements --silent 2>&1)",
+      "PowerShell($machine = [System.Environment]::GetEnvironmentVariable\\('Path','Machine'\\); $user = [System.Environment]::GetEnvironmentVariable\\('Path','User'\\); $env:Path = \"$machine;$user\"; try { \"node: $\\(& node -v\\)\"; \"npm: $\\(& npm -v\\)\" } catch { \"still not found\" }; & where.exe node 2>&1; Get-ChildItem \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" -ErrorAction SilentlyContinue | Select-Object FullName)",
+      "PowerShell($m = [System.Environment]::GetEnvironmentVariable\\('Path','Machine'\\); $u = [System.Environment]::GetEnvironmentVariable\\('Path','User'\\); $env:Path = \"$m;$u\"; Set-Location \"c:\\\\Users\\\\ROOT\\\\Desktop\\\\Elkheta Curriculum Plan\\\\elkheta-react\"; npm install 2>&1 | Select-Object -Last 12)"
+    ]
+  }
+}

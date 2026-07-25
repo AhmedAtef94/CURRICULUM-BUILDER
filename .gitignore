@@ -1,0 +1,13 @@
+# dependencies & build output
+node_modules/
+dist/
+dist-ssr/
+
+# local env / secrets (never commit the service_role key)
+.env
+.env.*
+*.local
+
+# editor / OS
+.DS_Store
+Thumbs.db
