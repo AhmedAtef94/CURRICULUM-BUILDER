@@ -157,6 +157,7 @@ export default function Dashboard({ profile, reloadProfile }) {
           mode={subjectModal.mode}
           subject={subjectModal.subject}
           existingCount={subjects.length}
+          subjects={subjects}
           onClose={() => setSubjectModal(null)}
           onSaved={onSubjectSaved}
         />
