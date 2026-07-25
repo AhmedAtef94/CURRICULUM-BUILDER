@@ -277,6 +277,10 @@ h1, h2, h3, h4, h5 { color: var(--text); }
 .field label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
 .field input, .field textarea, .field select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; background: var(--panel); color: var(--text); }
 input.invalid, select.invalid, textarea.invalid { border-color: var(--danger) !important; background: rgba(239,68,68,0.10) !important; }
+/* Dropdown items must stay dark-on-light regardless of the select's state —
+   otherwise an invalid select's light-red fill bleeds into the option list
+   and the light text becomes unreadable. */
+.field select option { background: var(--card); color: var(--text); }
 
 /* Color swatches */
 .color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
